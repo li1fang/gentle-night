@@ -1,0 +1,15 @@
+name: Core checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  core:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test deterministic model
+        run: swift test --disable-xctest
+      - name: Verify safe preview command
+        run: swift run gentle-night-preview --idle-minutes 35 --seed 42
