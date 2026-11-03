@@ -11,7 +11,5 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
-      - name: Test deterministic model
-        run: swift test --disable-xctest
-      - name: Verify safe preview command
-        run: swift run gentle-night-preview --idle-minutes 35 --seed 42
+      - name: Test, build and package
+        run: bash scripts/test.sh

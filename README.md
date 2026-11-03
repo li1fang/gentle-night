@@ -2,59 +2,35 @@
 
 [简体中文](README.zh-CN.md)
 
-Gentle Night is an early macOS project for gradually masking an idle OLED display to black, then quickly revealing the current desktop when activity returns. The intended app keeps the session unlocked and the display connected.
+A native macOS menu-bar prototype that gradually masks the live desktop to black without locking the session. Compare uniform dimming, a soft iris, and deterministic probabilistic disappearance. Defaults: begin at 10 idle minutes, black at 60, reverse recovery in at most 0.8 seconds proportional to progress.
 
-Its main experiment is **probabilistic disappearance**: each covered pixel is either transparent, revealing its original color, or opaque black. Pixels near the edges disappear earlier; a shrinking, increasingly sparse central region remains. A fixed threshold for each pixel prevents repeated random flickering during one fade cycle.
+## Build and use
 
-## Current status
-
-This repository is a design and core-model scaffold. It is **not an installable screen-dimming app**.
-
-| Component | Status |
-| --- | --- |
-| Configurable timeline, deterministic masks, recovery model | Swift core model |
-| `gentle-night-preview` | JSON-only model preview; does not control any display |
-| Menu-bar app, desktop overlay, idle detection, audio handling | Planned |
-| Cursor hiding, fullscreen behavior, HDR and OLED verification | Unverified |
-
-The core has no third-party dependencies and does not request permissions, capture the screen or audio, or change system settings.
-
-## Intended behavior
-
-- Start fading after **10 minutes** of recognized inactivity and reach full black at **60 minutes** total inactivity. Both values will be configurable.
-- Compare three modes: uniform dimming, a soft inward iris, and probabilistic disappearance.
-- Restore along the same mask sequence in `0.8 × current progress` seconds, up to 0.8 seconds from full black.
-- Keep the desktop live beneath the overlay. Do not freeze a screenshot, steal focus, or consume the first input used to restore the screen.
-- Consider audio activity separately from video. A running audio output stream does not prove that audible sound is present; the implementation and permission tradeoff remain to be validated.
-
-These are product targets. Overlay behavior and physical display results have not yet been verified. Gentle Night does not promise to prevent burn-in or replace the display's own maintenance features.
-
-## Run the model preview
-
-Use Xcode 16 or later with a Swift 6 toolchain for tests. Command Line Tools alone are not guaranteed to expose the testing libraries. The initial macOS deployment target is macOS 14 or later.
+Requires macOS 14+, Xcode 16+ / Swift 6. Test scripts also require Python 3.
 
 ```sh
-swift test --disable-xctest
-swift run gentle-night-preview --idle-minutes 35 --seed 42
-swift run gentle-night-preview --mode probabilistic --idle-minutes 50 --width 96 --height 54 --seed 42
+bash scripts/build-app.sh
+open "dist/Gentle Night.app"
 ```
 
-If Command Line Tools are selected, choose Xcode for this test command without changing the global developer setting:
+The ☾ menu starts with automatic fading disabled. Try the bounded eight-second preview, then enable automatic fading. Timing, recovery speed, effect, pause and audio hold are configurable. No login item or service is installed. The candidate is ad-hoc signed, not notarized.
+
+Audio hold reads output-stream activity without capturing audio. Silent streams can still hold the screen visible. Unavailable audio metadata (including macOS before 14.2) conservatively holds visibility when audio hold is enabled. No screen/audio recording or Accessibility permission is requested.
+
+Cursor hiding is experimental and off by default; the system pointer may remain visible on an otherwise black screen. Automatic fading temporarily prevents idle display/system sleep. Global screensaver/password settings are not changed; configure automatic screensavers separately. Input passes through, including the first click or key used to restore.
+
+## Accelerated checks
 
 ```sh
-DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcrun swift test --disable-xctest
+bash scripts/test.sh --with-display
+# Optional real full-display test: 3s start, 12s black, 45s automatic exit
+bash scripts/run-accelerated.sh
 ```
 
-Supported preview modes are `uniform`, `iris`, and `probabilistic`. The preview prints JSON; it does not draw an overlay or black out your screen. Grid dimensions are model samples, not verified physical OLED pixel coordinates.
+Tests cover a virtual hour, nine Swift contracts, CLI, audio metadata, 126 actual GPU renders, a bounded window lifecycle and app packaging/signature verification. See [testing and remaining acceptance](docs/TESTING.md), [execution plan](docs/IMPLEMENTATION.md), and [visual design](docs/DESIGN.md).
 
-## Next steps
-
-1. Build a reversible single-display overlay prototype and verify input, focus, cursor, and fullscreen behavior.
-2. Compare the three effects on a real OLED display, including SDR/HDR and display scaling.
-3. Validate lightweight audio-state detection, then add the menu-bar controls and adjustable settings.
-
-See [the design](docs/DESIGN.md) for the model and acceptance criteria, and [contributing](CONTRIBUTING.md) for development guidance.
+The probabilistic renderer uses stable hash thresholds, not blue noise. Binary render pixels do not establish one-to-one physical OLED pixel mapping. HDR, physical black level, cursor behavior, screenshot automation and long-term protection require separate verification. No burn-in prevention or lifespan benefit is guaranteed.
 
 ## License
 
-[MIT](LICENSE).
+[MIT](LICENSE). See [contributing](CONTRIBUTING.md).

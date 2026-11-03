@@ -1,14 +1,15 @@
 # Contributing
 
-Gentle Night is currently a Swift core-model scaffold. Discuss changes to the visual model or operating-system behavior in an issue before expanding the scope.
+Gentle Night is currently a native macOS overlay prototype. Discuss changes to the visual model or operating-system behavior in an issue before expanding the scope.
 
 ## Development
 
 Use Xcode 16 or later with a Swift 6 toolchain for tests. Command Line Tools alone are not guaranteed to expose the testing libraries. The initial macOS deployment target is macOS 14 or later.
 
 ```sh
-swift test --disable-xctest
-swift run gentle-night-preview --idle-minutes 35 --seed 42
+bash scripts/test.sh
+# Logged-in Mac: include GPU, audio and bounded window checks
+bash scripts/test.sh --with-display
 ```
 
 If Command Line Tools are selected, use a process-scoped Xcode selection without changing the global developer setting:
