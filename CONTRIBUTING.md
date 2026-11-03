@@ -18,7 +18,7 @@ If Command Line Tools are selected, use a process-scoped Xcode selection without
 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcrun swift test --disable-xctest
 ```
 
-The preview only prints JSON. Keep it safe to run without changing the display, recording audio, requesting permissions, or installing background services.
+The `gentle-night-preview` CLI only prints JSON. Keep it safe to run without changing the display, recording audio, requesting permissions, or installing background services.
 
 ## Changes and evidence
 
@@ -30,3 +30,13 @@ The preview only prints JSON. Keep it safe to run without changing the display, 
 - Keep personal paths, private documents, credentials, and device identifiers out of commits and issues.
 
 See [the design](docs/DESIGN.md) for the intended behavior and unresolved integration questions. Contributions are provided under the repository's [MIT license](LICENSE).
+
+## Helpful first contributions
+
+- Improve setup instructions or keep the English and Chinese docs aligned.
+- Report a reproducible scaling, HDR, fullscreen or cursor issue using the bug form.
+- Propose an audio heuristic or accessibility improvement with a concrete use case.
+
+The [FAQ](docs/FAQ.md), [testing guide](docs/TESTING.md), and [documentation index](docs/README.md) are good starting points. Subjective effect preferences and physical display results should be labeled as observations, not general compatibility claims.
+
+Documentation artwork can be regenerated with the optional Pillow dependency in `docs/requirements.txt`; see [artwork instructions](docs/README.md#documentation-artwork). Keep informational content in text as well as in images.

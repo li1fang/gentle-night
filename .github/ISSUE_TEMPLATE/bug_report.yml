@@ -1,0 +1,35 @@
+name: Bug report
+description: Report unexpected behavior with a reproducible example.
+title: "[Bug]: "
+body:
+  - type: textarea
+    id: behavior
+    attributes:
+      label: What happened?
+      description: What did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Include the selected effect, timing, audio hold and cursor settings.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: macOS version and commit
+      placeholder: "macOS version / git rev-parse --short HEAD"
+    validations:
+      required: true
+  - type: textarea
+    id: display
+    attributes:
+      label: Display setup (if relevant)
+      description: Model, connection, main/secondary display, scaling and HDR. Omit serial numbers.
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Logs or minimal evidence
+      description: Remove personal paths and private screen content before sharing.
